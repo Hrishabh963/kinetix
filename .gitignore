@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build & Cache
+.next/
+out/
+dist/
+build/
+.turbo/
+*.tsbuildinfo
+
+# Env & Secrets
+.env
+.env.local
+.env*.local
+
+# Local DB
+*.sqlite
+*.sqlite3
+*.db
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

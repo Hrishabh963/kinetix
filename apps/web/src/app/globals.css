@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --font-sans: "Plus Jakarta Sans";
+  --font-mono: "JetBrains Mono";
+  --bg-obsidian: #08090d;
+  --bg-surface: #11131a;
+  --bg-elevated: #181b25;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --accent-primary: #8b5cf6;
+  accent-color: #8b5cf6;
+  scrollbar-color: #32374a #0d0f15;
+}
+
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0d0f15;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #32374a;
+    border-radius: 9999px;
+  }
+}
+
+html,
+body {
+  background-color: var(--bg-obsidian);
+  color: #f4f4f6;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono-num {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Native <dialog> modal scroll containment & backdrop */
+dialog:modal {
+  overscroll-behavior: contain;
+  margin: auto;
+  max-height: min(90dvh, 860px);
+  max-width: min(94vw, 760px);
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  background: #10121a;
+  color: #f4f4f6;
+  padding: 0;
+  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.85);
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(4, 5, 10, 0.76);
+  backdrop-filter: blur(10px);
+}
+
+/* Subtle cinematic grain overlay */
+.cinematic-grid-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -15%, rgba(139, 92, 246, 0.16), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 10%, rgba(14, 165, 233, 0.1), transparent);
+}

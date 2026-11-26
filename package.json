@@ -1,0 +1,26 @@
+{
+  "name": "kinetix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open-source, local-first movie, TV show, and anime tracker with personalised storage and Vercel free-tier deployment.",
+  "license": "MIT",
+  "packageManager": "npm@11.19.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
