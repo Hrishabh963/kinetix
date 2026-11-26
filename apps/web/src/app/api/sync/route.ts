@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createDbClient, userEntries } from "@kinetix/db";
+import { createDbClient, ensureTursoSchema, userEntries } from "@kinetix/db";
 import { UserEntrySchema } from "@kinetix/core";
 import { z } from "zod";
 
@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    await ensureTursoSchema();
     const body = await req.json();
     const parsed = SyncPayloadSchema.safeParse(body);
     if (!parsed.success) {
