@@ -1,4 +1,19 @@
-import type { ScoreScale, SmartFilter, TrackedMedia, WatchLog } from "./types";
+import type { MediaItem, ScoreScale, SmartFilter, TrackedMedia, WatchLog } from "./types";
+
+/**
+ * Format total episodes for display, using aired count for ongoing series without a fixed total.
+ */
+export function formatTotalEpisodes(
+  media: Pick<MediaItem, "totalEpisodes" | "nextAiringEpisode" | "airingStatus">,
+): string {
+  if (media.totalEpisodes !== undefined && media.totalEpisodes !== null) {
+    return String(media.totalEpisodes);
+  }
+  if (media.nextAiringEpisode && media.nextAiringEpisode > 1) {
+    return `${media.nextAiringEpisode - 1}+`;
+  }
+  return media.airingStatus === "airing" ? "Ongoing" : "?";
+}
 
 /**
  * Format a normalized 0-100 score according to user preference.

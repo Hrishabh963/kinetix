@@ -17,7 +17,7 @@ import {
   Tv,
 } from "lucide-react";
 import type { MediaItem, MediaType, TrackingStatus, UserEntry, WatchLog } from "@kinetix/core";
-import { evaluateSmartFilter, formatScore } from "@kinetix/core";
+import { evaluateSmartFilter, formatScore, formatTotalEpisodes } from "@kinetix/core";
 import { CommandSearch } from "@/components/CommandSearch";
 import { MediaModal } from "@/components/MediaModal";
 import { PortabilityModal } from "@/components/PortabilityModal";
@@ -279,8 +279,13 @@ export default function HomePage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                   {upNextItems.map(({ media, entry }) => {
-                    const pct = media.totalEpisodes
-                      ? Math.min(100, Math.round((entry.progressEpisode / media.totalEpisodes) * 100))
+                    const denom =
+                      media.totalEpisodes ??
+                      (media.nextAiringEpisode && media.nextAiringEpisode > 1
+                        ? media.nextAiringEpisode - 1
+                        : undefined);
+                    const pct = denom
+                      ? Math.min(100, Math.round((entry.progressEpisode / denom) * 100))
                       : 45;
                     return (
                       <div
@@ -325,8 +330,7 @@ export default function HomePage() {
                           </button>
                           <div className="mt-1 flex items-center justify-between text-xs text-zinc-400">
                             <span className="font-mono-num">
-                              Ep {entry.progressEpisode}
-                              {media.totalEpisodes ? ` / ${media.totalEpisodes}` : ""}
+                              Ep {entry.progressEpisode} / {formatTotalEpisodes(media)}
                             </span>
                             <span className="font-mono-num text-amber-300">
                               {formatScore(entry.score, store.preferences.scoreScale)}
@@ -498,7 +502,7 @@ export default function HomePage() {
                       <span className="uppercase">{media.mediaType}</span>
                       {media.mediaType !== "movie" && (
                         <span className="font-mono-num">
-                          Ep {entry.progressEpisode}/{media.totalEpisodes ?? "?"}
+                          Ep {entry.progressEpisode}/{formatTotalEpisodes(media)}
                         </span>
                       )}
                     </div>

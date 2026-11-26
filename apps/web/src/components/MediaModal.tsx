@@ -23,7 +23,7 @@ import type {
   TrackingStatus,
   UserEntry,
 } from "@kinetix/core";
-import { formatScore } from "@kinetix/core";
+import { formatScore, formatTotalEpisodes } from "@kinetix/core";
 
 interface MediaModalProps {
   media: MediaItem | null;
@@ -313,11 +313,7 @@ export function MediaModal({
                       Episode Progress
                     </span>
                     <span className="font-mono-num text-sm font-semibold text-zinc-200">
-                      {progressEpisode} /{" "}
-                      {media.totalEpisodes ??
-                        (media.nextAiringEpisode
-                          ? `${media.nextAiringEpisode - 1}+`
-                          : "?")}
+                      {progressEpisode} / {formatTotalEpisodes(media)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
