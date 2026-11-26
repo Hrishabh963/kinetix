@@ -313,7 +313,11 @@ export function MediaModal({
                       Episode Progress
                     </span>
                     <span className="font-mono-num text-sm font-semibold text-zinc-200">
-                      {progressEpisode} / {media.totalEpisodes ?? "?"}
+                      {progressEpisode} /{" "}
+                      {media.totalEpisodes ??
+                        (media.nextAiringEpisode
+                          ? `${media.nextAiringEpisode - 1}+`
+                          : "?")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -330,18 +334,22 @@ export function MediaModal({
                       min={0}
                       max={media.totalEpisodes ?? 9999}
                       value={progressEpisode}
-                      onChange={(e) => setProgressEpisode(Math.max(0, Number(e.target.value)))}
+                      onChange={(e) => {
+                        const val = Math.max(0, Number(e.target.value));
+                        setProgressEpisode(val);
+                        if (val > 0 && status === "planned") setStatus("watching");
+                      }}
                       className="w-full rounded-lg bg-black/30 px-3 py-1.5 text-center font-mono-num text-sm border border-white/10"
                     />
                     <button
                       type="button"
-                      onClick={() =>
-                        setProgressEpisode(
-                          media.totalEpisodes
-                            ? Math.min(media.totalEpisodes, progressEpisode + 1)
-                            : progressEpisode + 1,
-                        )
-                      }
+                      onClick={() => {
+                        const next = media.totalEpisodes
+                          ? Math.min(media.totalEpisodes, progressEpisode + 1)
+                          : progressEpisode + 1;
+                        setProgressEpisode(next);
+                        if (next > 0 && status === "planned") setStatus("watching");
+                      }}
                       className="rounded-lg bg-violet-500/30 p-2 hover:bg-violet-500/45 text-violet-100"
                       aria-label="Increase episode"
                     >
@@ -377,6 +385,53 @@ export function MediaModal({
                 </div>
               )}
             </div>
+
+            {/* Interactive Episode Checklist (TV & Anime) */}
+            {media.mediaType !== "movie" && (
+              <div className="rounded-xl bg-white/[0.04] p-4 border border-white/10 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                    Episodes (Tap to set progress)
+                  </span>
+                  {media.nextAiringEpisode && (
+                    <span className="text-[11px] text-emerald-300 font-mono-num">
+                      Ep {media.nextAiringEpisode} airing soon
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+                  {(() => {
+                    const maxKnown =
+                      media.totalEpisodes ??
+                      (media.nextAiringEpisode ? media.nextAiringEpisode - 1 : 24);
+                    const startEp = Math.max(1, progressEpisode > 30 ? progressEpisode - 10 : 1);
+                    const endEp = Math.min(maxKnown, startEp + 35);
+                    const eps: number[] = [];
+                    for (let i = startEp; i <= endEp; i++) eps.push(i);
+                    return eps.map((ep) => {
+                      const watched = ep <= progressEpisode;
+                      return (
+                        <button
+                          key={ep}
+                          type="button"
+                          onClick={() => {
+                            setProgressEpisode(ep === progressEpisode ? ep - 1 : ep);
+                            if (status === "planned") setStatus("watching");
+                          }}
+                          className={`min-w-[2.25rem] h-8 px-2 rounded-lg font-mono-num text-xs font-medium border transition ${
+                            watched
+                              ? "bg-violet-500/30 border-violet-400/60 text-white"
+                              : "bg-black/30 border-white/10 text-zinc-400 hover:border-white/30 hover:text-zinc-200"
+                          }`}
+                        >
+                          {ep}
+                        </button>
+                      );
+                    });
+                  })()}
+                </div>
+              </div>
+            )}
 
             {/* Anime Sub/Dub + Favorite + Watched With */}
             <div className="flex flex-wrap items-center gap-3">
